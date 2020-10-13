@@ -1,0 +1,221 @@
+#include <iostream> 
+#include <iomanip> 
+#include <cmath> 
+#include <string> 
+
+using namespace std;
+
+/* 
+
+-we are prividing mneu options for all of the previous code functions 
+-we are checking that the inputs are valid 
+-we are returning the right tasks 
+-we are terminating the function tasks if the user decides to quit
+
+*/ 
+
+// THIS IS THE PROGRAM FOR OPTION ONE
+double calcSimScore(string paramOne, string paramTwo){ // The order of the components inside of this function have been shifted for organizational purposes 
+
+    double simScore;// Still the main component that we are looking for 
+    double unmatch = 0.; // Our unmatches counter 
+
+    if(paramTwo == "" || paramOne == ""){ // we are checking if either string is empty before running the function now 
+        simScore = 0.; 
+    }
+
+    if(paramOne.length() == paramTwo.length()){ // we are making sure that the calculation is only done if the lengths are equal 
+    for(int i = 0; i < paramOne.length(); i++){
+        if(paramOne[i] != paramTwo[i]){
+            unmatch++; // we are moving the component that is counting the the unmatches into the main for loop 
+        } 
+    }
+    simScore = (paramOne.length()- unmatch)/ paramOne.length(); // we are now conducting the calculation 
+    }else{
+    simScore = 0; // the defualt score if the lengths are not equal 
+    }
+
+
+
+    return simScore; // we are returning the final simscore 
+}
+
+
+// THIS IS THE PROGRAM FOR OPTION TWO 
+double findBestSimScore(string genome, string sequence) // Now this function is gonna run through the entire genome and find the highest score 
+{   
+    double highestScore = 0.; 
+    int A = genome.length(); // this is to simplify the organization within the function 
+    int B = sequence.length(); // this is to simplify the organization within the function 
+
+    if (sequence.length() == 0 || genome.length() == 0) { // This is a component that is crucial and it checks if either string is empty or not 
+        return 0;
+    }
+
+    if (sequence.length() > genome.length()) // This is telling us that if the sequence is longer the score is automatically 0 
+    {
+        highestScore = 0.;  // The denoted score
+
+    }
+    else
+    { 
+
+        for( int j = 0; j <= A - B + 1; j++) // This is going to iterate through each known group 
+        {
+            string subGenome = genome.substr(j, B); // This is forming the substrings it wants to go through 
+ 
+            double score = calcSimScore(subGenome,sequence); // we are assigning the output to a variable 
+                if(score > highestScore) // we are then changing the highest score based on evaluations 
+                {
+                    highestScore = score; 
+                }
+        }
+    }
+
+    return highestScore; // we return the highest score here 
+
+}
+
+
+//THIS IS THE PROGRAM FOR OPTION THREE 
+
+void findMatchedGenome(string genomeOne, string genomeTwo, string genomeThree, string sequence) // we are entering multiple genomes and seeing which one would be the best match 
+{
+    // I am simplifying the titles and making the function calculate each score beforehand so that the organization flows smoothly 
+    double A = findBestSimScore(genomeOne,sequence); // first genome calculation 
+    double B = findBestSimScore(genomeTwo,sequence);// second genome calculation 
+    double C = findBestSimScore(genomeThree,sequence); // third genome calculation 
+
+
+    if(genomeOne == "" || genomeTwo == "" || genomeThree == "" || sequence == "")// this is checking if any of the strings are empty 
+    {
+        cout << "Genomes or sequence is empty." << endl; // output in the event that one of them are empty 
+    }else if(genomeOne.length()!= genomeTwo.length() || genomeTwo.length() != genomeThree.length() || genomeOne.length() != genomeThree.length()) // This is checking the lengths are all corresponding to one another 
+    {
+        cout << "​Lengths of genomes are different." << endl; 
+    }else if(A > B && A > C){// If genome one is the best match 
+        cout << "Genome 1 is the best match." << endl; 
+    }else if(B > A && B > C){// If genome two is the best match 
+        cout << "Genome 2 is the best match." << endl; 
+    }else if(C > A && C > B){ // If genome three is the best match 
+        cout << "Genome 3 is the best match." << endl;
+    }else if(A == B && A > C){ // If the first two are the best matches 
+        cout << "Genome 1 is the best match." << endl; 
+        cout << "Genome 2 is the best match." << endl;
+    }else if(A == C && A > B){ //if the first and last are the best matches 
+        cout << "Genome 1 is the best match." << endl; 
+        cout << "Genome 3 is the best match." << endl;       
+    }else if(C == B && C > A){ // If the last two are the best matches 
+        cout << "Genome 2 is the best match." << endl; 
+        cout << "Genome 3 is the best match." << endl;          
+    }else{ // If all three of them are equal in scores 
+        cout << "Genome 1 is the best match." << endl; 
+        cout << "Genome 2 is the best match." << endl; 
+        cout << "Genome 3 is the best match." << endl;
+    }
+
+
+}
+
+
+// THIS IS THE MAIN FUNCTION PROGRAM
+int main() 
+{ 
+
+    int menuOption; 
+
+    //These are the variables for the first case 
+    string paramOne; 
+    string paramTwo; 
+
+    //These are the variables for the second case 
+    string genome; 
+    string sequence; 
+
+    //These are the variables for the third case
+    string genomeOne; 
+    string genomeTwo; 
+    string genomeThree; 
+    string ogSequence; 
+
+// the first time the menu is being displayed 
+    cout << "Select a numerical option: " << endl; 
+    cout << "=== menu ===" << endl; 
+    cout << "1. Find similarity score" << endl; 
+    cout << "2. Find the best similarity score" << endl; 
+    cout << "3. Analyze the genome sequences" << endl; 
+    cout << "4. Quit" << endl; 
+
+// the first time a user is putting in the input 
+
+    cin >> menuOption; 
+
+    while(menuOption != 4)
+    {
+
+            switch(menuOption)
+            {
+
+                case 1:  // we need the initial two parameters and we are collecting that here 
+
+                    cout << "Enter sequence 1:" << endl;
+                    cin >> paramOne; 
+                    cout << "Enter sequence 2:" << endl;
+                    cin >> paramTwo; 
+
+                    calcSimScore(paramOne,paramTwo); // calling the outside function here 
+
+                    cout << "Similarity score: " << calcSimScore(paramOne,paramTwo) << endl; 
+
+                    break; 
+                
+                case 2: // we need the genome and sequence that we are comparing to here 
+
+                    cout << "Enter genome: " << endl; 
+                    cin >> genome; 
+                    cout << "Enter sequence: " << endl; 
+                    cin >> sequence; 
+
+                    findBestSimScore(genome,sequence); // calling the outside function here 
+
+                    cout << "Best similarity score: " <<  findBestSimScore(genome,sequence) << endl; 
+                    
+                    break; 
+                
+                case 3: // we are taking in the four different inputs in here to calculate the final scores 
+
+                    cout << "Enter genome 1: " << endl; 
+                    cin >> genomeOne; 
+                    cout << "Enter genome 2: " << endl; 
+                    cin >> genomeTwo; 
+                    cout << "Enter genome 3: " << endl; 
+                    cin >> genomeThree; 
+                    cout << "Enter sequence: " << endl; 
+                    cin >> sequence; 
+
+                    findMatchedGenome(genomeOne,genomeTwo,genomeThree,sequence); // calling the outside function here 
+
+                    
+                    break; 
+
+                default: 
+
+                    cout << "Invalid option. " << endl; 
+            }
+
+// we are reiterating the menu till the user opts for the 4 which will terminate the loop 
+        cout << "Select a numerical option: " << endl; 
+        cout << "=== menu ===" << endl; 
+        cout << "1. Find similarity score" << endl; 
+        cout << "2. Find the best similarity score" << endl; 
+        cout << "3. Analyze the genome sequences" << endl; 
+        cout << "4. Quit" << endl; 
+
+        cin >> menuOption; 
+
+    }
+
+// The function has been terminated 
+    cout << "Good bye! " << endl; 
+
+}
